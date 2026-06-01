@@ -1,116 +1,39 @@
-# Logs
-logs/
-*.log
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-bun-debug.log*
-lerna-debug.log*
 
-# Diagnostic reports
-report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
-
-# Runtime data
-pids/
-*.pid
-*.seed
-*.pid.lock
-
-# Dependency directories
-node_modules/
-jspm_packages/
-bower_components/
-web_modules/
-
-# Package manager caches
-.npm/
-.pnpm-store/
-.yarn/cache/
-.yarn/unplugged/
-.yarn/build-state.yml
-.yarn/install-state.gz
-.yarn-integrity
-
-# Yarn Berry files that should remain tracked when used
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-
-# Build outputs
-build/
-dist/
-out/
-.output/
-.vercel/
-.netlify/
-
-# Framework caches and outputs
-.next/
-.nuxt/
-.svelte-kit/
-.docusaurus/
-.vuepress/dist/
-.temp/
-.cache/
-.parcel-cache/
-.turbo/
-.vite/
-.fusebox/
-.firebase/
-.serverless/
-.dynamodb/
-
-# TypeScript / tooling cache
-*.tsbuildinfo
-.eslintcache
-.stylelintcache
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
-
-# Test coverage
-coverage/
-*.lcov
-.nyc_output/
-
-# Environment variables
-.env
-.env.*
+# env
+.env*
 !.env.example
 
-# Local databases
-*.sqlite
-*.sqlite3
-*.db
-*.db-journal
+# vercel
+.vercel
 
-# Uploads and temporary local files
-uploads/
-tmp/
-temp/
-.local/
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Editor / IDE files
-.vscode/
-.idea/
-.vscode-test/
-*.swp
-*.swo
-
-# AI local workspace files
-.claude/
-.codex/
-
-# Keep these project files tracked
-!README.md
-!package.json
-!package-lock.json
-!pnpm-lock.yaml
-!yarn.lock
-!bun.lockb
+# typescript
+*.tsbuildinfo
