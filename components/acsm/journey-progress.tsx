@@ -1,7 +1,14 @@
-import { calculateProgress } from "@/lib/progress";
+import type { JourneyLength } from "@/lib/types";
 
-export function JourneyProgress({ completedDays, totalDays }: { completedDays: number; totalDays: number }) {
-  const progress = calculateProgress(completedDays, totalDays);
+export function JourneyProgress({
+  completedDays,
+  totalDays,
+}: {
+  completedDays: number;
+  totalDays: JourneyLength;
+}) {
+  const safeCompletedDays = Math.min(Math.max(completedDays, 0), totalDays);
+  const progress = Math.round((safeCompletedDays / totalDays) * 100);
 
   return (
     <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-6">
@@ -11,7 +18,7 @@ export function JourneyProgress({ completedDays, totalDays }: { completedDays: n
           <p className="mt-2 text-3xl font-semibold tracking-[-0.05em]">{progress}%</p>
         </div>
         <p className="text-sm text-[#a7a29a]">
-          {completedDays} de {totalDays} dias
+          {safeCompletedDays} de {totalDays} dias
         </p>
       </div>
       <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/10">
