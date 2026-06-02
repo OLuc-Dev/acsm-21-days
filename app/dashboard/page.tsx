@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DailyChallengeCard } from "@/components/acsm/daily-challenge-card";
 import { EmotionalCheckIn } from "@/components/acsm/emotional-check-in";
 import { JourneyProgress } from "@/components/acsm/journey-progress";
 import { AppShell } from "@/components/layout/app-shell";
+import { Button } from "@/components/ui/button";
 import { getChallengeForDay } from "@/lib/challenges";
 import { calculateProgress } from "@/lib/progress";
 import { getCheckIns, getJourney } from "@/lib/storage";
@@ -35,6 +37,12 @@ export default function DashboardPage() {
     [journey, checkIns],
   );
 
+  useEffect(() => {
+    if (progress?.isCompleted) {
+      router.replace("/result");
+    }
+  }, [progress, router]);
+
   if (isLoading || !journey || !progress) {
     return (
       <AppShell>
@@ -42,6 +50,26 @@ export default function DashboardPage() {
           <p className="text-sm uppercase tracking-[0.32em] text-[#a7a29a]">
             Carregando sua jornada...
           </p>
+        </section>
+      </AppShell>
+    );
+  }
+
+  if (progress.isCompleted) {
+    return (
+      <AppShell>
+        <section className="mx-auto max-w-3xl px-5 py-20 text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.32em] text-[#d6a15d]">
+            Jornada concluída
+          </p>
+          <h1 className="mt-5 text-3xl font-semibold tracking-[-0.05em] md:text-5xl">
+            Você chegou ao fim da jornada. Veja o que mudou.
+          </h1>
+          <div className="mt-8">
+            <Button asChild size="lg">
+              <Link href="/result">Ver resultado</Link>
+            </Button>
+          </div>
         </section>
       </AppShell>
     );
