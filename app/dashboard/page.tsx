@@ -48,6 +48,12 @@ export default function DashboardPage() {
   }
 
   const challenge = getChallengeForDay(journey.length, progress.currentDay);
+  const currentCheckIn =
+    checkIns.find((checkIn) => checkIn.day === progress.currentDay) ?? null;
+
+  const handleCheckInSaved = () => {
+    setCheckIns(getCheckIns());
+  };
 
   return (
     <AppShell>
@@ -71,7 +77,13 @@ export default function DashboardPage() {
         </div>
         <aside className="space-y-5 lg:pt-28">
           <JourneyProgress completedDays={progress.completedDays} totalDays={journey.length} />
-          <EmotionalCheckIn />
+          <EmotionalCheckIn
+            key={progress.currentDay}
+            journeyId={journey.id}
+            day={progress.currentDay}
+            existingCheckIn={currentCheckIn}
+            onSave={handleCheckInSaved}
+          />
         </aside>
       </section>
     </AppShell>
