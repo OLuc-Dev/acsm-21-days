@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { fearProfiles } from "@/lib/acsm-method";
 import { calculateProgress } from "@/lib/progress";
-import { getCheckIns, getJourney } from "@/lib/storage";
+import { clearJourney, getCheckIns, getJourney } from "@/lib/storage";
 import type { DailyCheckIn, UserJourney } from "@/lib/types";
 
 export default function ResultPage() {
@@ -53,6 +52,11 @@ export default function ResultPage() {
       ? "Sem registro emocional"
       : `${progress.averageEmotionalScore}/5 de intensidade média do medo`;
 
+  const handleRestart = () => {
+    clearJourney();
+    router.push("/onboarding");
+  };
+
   return (
     <AppShell>
       <section className="mx-auto max-w-4xl px-5 py-20 text-center">
@@ -80,8 +84,8 @@ export default function ResultPage() {
               <Button type="button" variant="secondary">
                 Compartilhar em breve
               </Button>
-              <Button asChild variant="ghost">
-                <Link href="/dashboard">Voltar ao dashboard</Link>
+              <Button type="button" variant="ghost" onClick={handleRestart}>
+                Iniciar nova jornada
               </Button>
             </div>
           </CardContent>
