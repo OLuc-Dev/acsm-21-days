@@ -7,7 +7,7 @@ import { EmotionalCheckIn } from "@/components/acsm/emotional-check-in";
 import { JourneyProgress } from "@/components/acsm/journey-progress";
 import { AppShell } from "@/components/layout/app-shell";
 import { fearProfiles } from "@/lib/acsm-method";
-import { getChallengeForDay } from "@/lib/challenges";
+import { initialChallenges } from "@/lib/challenges";
 import { calculateProgress } from "@/lib/progress";
 import { getCheckIns, getJourney, saveJourney } from "@/lib/storage";
 import type { DailyCheckIn, UserJourney } from "@/lib/types";
@@ -18,6 +18,17 @@ function getFearTitle(fearType: UserJourney["fearType"]) {
 
 function getCheckInsForJourney(checkIns: DailyCheckIn[], journeyId: string) {
   return checkIns.filter((checkIn) => checkIn.journeyId === journeyId);
+}
+
+function getChallengeForDay(day: number) {
+  const safeDay = Math.max(day, 1);
+  const challenge = initialChallenges.find((dailyChallenge) => dailyChallenge.day === safeDay);
+
+  if (challenge) {
+    return challenge;
+  }
+
+  return initialChallenges[(safeDay - 1) % initialChallenges.length];
 }
 
 export default function DashboardPage() {
