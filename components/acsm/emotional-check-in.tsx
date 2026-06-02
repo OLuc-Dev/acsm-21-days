@@ -7,10 +7,10 @@ import { saveCheckIn } from "@/lib/storage";
 import type { DailyCheckIn, EmotionalScore } from "@/lib/types";
 
 type EmotionalCheckInProps = {
-  day: number;
-  journeyId: string;
+  day?: number;
+  journeyId?: string;
   existingCheckIn?: DailyCheckIn;
-  onSaved: () => void;
+  onSaved?: () => void;
 };
 
 const emotionalScores: EmotionalScore[] = [1, 2, 3, 4, 5];
@@ -34,6 +34,11 @@ export function EmotionalCheckIn({ day, journeyId, existingCheckIn, onSaved }: E
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (!day || !journeyId) {
+      setError("Crie uma jornada antes de salvar o check-in.");
+      return;
+    }
+
     const trimmedReflection = reflection.trim();
 
     if (!trimmedReflection) {
@@ -51,14 +56,16 @@ export function EmotionalCheckIn({ day, journeyId, existingCheckIn, onSaved }: E
       createdAt: existingCheckIn?.createdAt ?? new Date().toISOString(),
     });
 
-    onSaved();
+    onSaved?.();
   };
 
   return (
     <form className="rounded-3xl border border-dashed border-white/15 bg-black/20 p-6" onSubmit={handleSubmit}>
       <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#d6a15d]">Check-in emocional</p>
       <p className="mt-3 text-sm leading-6 text-[#a7a29a]">
-        Registre o que aconteceu quando você parou de negociar com a fuga no dia {day}.
+        {day
+          ? `Registre o que aconteceu quando você parou de negociar com a fuga no dia ${day}.`
+          : "Registre o que aconteceu quando você parou de negociar com a fuga."}
       </p>
 
       <div className="mt-5 grid grid-cols-5 gap-2" role="radiogroup" aria-label="Nota emocional">
