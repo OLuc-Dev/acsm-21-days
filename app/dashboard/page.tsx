@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DailyChallengeCard } from "@/components/acsm/daily-challenge-card";
 import { EmotionalCheckIn } from "@/components/acsm/emotional-check-in";
-import { JourneyProgress } from "@/components/acsm/journey-progress";
+import { JourneyProgressCard } from "@/components/acsm/journey-progress";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { getChallengeForDay } from "@/lib/challenges";
@@ -104,7 +104,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <aside className="space-y-5 lg:pt-28">
-          <JourneyProgress completedDays={progress.completedDays} totalDays={journey.length} />
+          <JourneyProgressCard completedDays={progress.completedDays} totalDays={journey.length} />
           <EmotionalCheckIn
             key={progress.currentDay}
             journeyId={journey.id}

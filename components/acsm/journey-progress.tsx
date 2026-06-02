@@ -1,6 +1,6 @@
 import type { JourneyLength } from "@/lib/types";
 
-export function JourneyProgress({
+export function JourneyProgressCard({
   completedDays,
   totalDays,
 }: {

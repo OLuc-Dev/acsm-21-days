@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { JourneyProgress } from "@/components/acsm/journey-progress";
+import { JourneyProgressCard } from "@/components/acsm/journey-progress";
 import { AppShell } from "@/components/layout/app-shell";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { fearProfiles } from "@/lib/acsm-method";
@@ -70,7 +70,7 @@ export default function ProgressPage() {
           Progresso é ver onde você parou de obedecer automaticamente.
         </h1>
         <div className="mt-10 grid gap-5 md:grid-cols-[0.9fr_1.1fr]">
-          <JourneyProgress completedDays={progress.completedDays} totalDays={journey.length} />
+          <JourneyProgressCard completedDays={progress.completedDays} totalDays={journey.length} />
           <div className="grid gap-4 sm:grid-cols-3">
             {stats.map(([label, value]) => (
               <Card key={label}>
