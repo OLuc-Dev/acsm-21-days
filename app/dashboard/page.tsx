@@ -2,10 +2,10 @@ import { DailyChallengeCard } from "@/components/acsm/daily-challenge-card";
 import { EmotionalCheckIn } from "@/components/acsm/emotional-check-in";
 import { JourneyProgress } from "@/components/acsm/journey-progress";
 import { AppShell } from "@/components/layout/app-shell";
-import { initialChallenges } from "@/lib/challenges";
+import { sevenDayChallenges } from "@/lib/challenges";
 
 export default function DashboardPage() {
-  const challenge = initialChallenges[0];
+  const challenge = sevenDayChallenges[0];
 
   return (
     <AppShell>
