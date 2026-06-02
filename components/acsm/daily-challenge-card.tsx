@@ -1,4 +1,4 @@
-import type { DailyChallenge } from "@/lib/challenges";
+import type { DailyChallenge } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function DailyChallengeCard({ challenge }: { challenge: DailyChallenge }) {
