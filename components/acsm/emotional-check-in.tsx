@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { saveCheckIn } from "@/lib/storage";
-import type { DailyCheckIn } from "@/lib/types";
-
-type EmotionalScore = DailyCheckIn["emotionalScore"];
+import type { DailyCheckIn, EmotionalScore } from "@/lib/types";
 
 type EmotionalCheckInProps = {
   day: number;
@@ -15,11 +13,10 @@ type EmotionalCheckInProps = {
   onSaved: () => void;
 };
 
-const scores: EmotionalScore[] = [1, 2, 3, 4, 5];
+const emotionalScores: EmotionalScore[] = [1, 2, 3, 4, 5];
 
-function createCheckInId(journeyId: string, day: number) {
-  return `checkin-${journeyId}-${day}-${Date.now().toString(36)}`;
-}
+const createCheckInId = (journeyId: string, day: number) =>
+  `checkin-${journeyId}-${day}-${Date.now().toString(36)}`;
 
 export function EmotionalCheckIn({ day, journeyId, existingCheckIn, onSaved }: EmotionalCheckInProps) {
   const [emotionalScore, setEmotionalScore] = useState<EmotionalScore>(existingCheckIn?.emotionalScore ?? 3);
@@ -34,7 +31,7 @@ export function EmotionalCheckIn({ day, journeyId, existingCheckIn, onSaved }: E
     setError("");
   }, [day, existingCheckIn]);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const trimmedReflection = reflection.trim();
@@ -55,7 +52,7 @@ export function EmotionalCheckIn({ day, journeyId, existingCheckIn, onSaved }: E
     });
 
     onSaved();
-  }
+  };
 
   return (
     <form className="rounded-3xl border border-dashed border-white/15 bg-black/20 p-6" onSubmit={handleSubmit}>
@@ -65,7 +62,7 @@ export function EmotionalCheckIn({ day, journeyId, existingCheckIn, onSaved }: E
       </p>
 
       <div className="mt-5 grid grid-cols-5 gap-2" role="radiogroup" aria-label="Nota emocional">
-        {scores.map((score) => {
+        {emotionalScores.map((score) => {
           const isSelected = score === emotionalScore;
 
           return (

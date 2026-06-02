@@ -1,63 +1,67 @@
-import type { DailyCheckIn, UserJourney } from "@/lib/types";
+import type { DailyCheckIn, UserJourney } from "./types";
 
-export const storageKeys = {
-  journey: "acsm:journey",
-  checkIns: "acsm:check-ins",
-} as const;
+const JOURNEY_STORAGE_KEY = "acsm:journey";
+const CHECK_INS_STORAGE_KEY = "acsm:check-ins";
 
-function canUseStorage() {
-  return typeof window !== "undefined";
-}
+const canUseLocalStorage = () =>
+  typeof window !== "undefined" && typeof window.localStorage !== "undefined";
 
-export function saveJourney(journey: UserJourney) {
-  if (!canUseStorage()) {
+const readJson = <T>(key: string, fallback: T): T => {
+  if (!canUseLocalStorage()) {
+    return fallback;
+  }
+
+  const rawValue = window.localStorage.getItem(key);
+
+  if (!rawValue) {
+    return fallback;
+  }
+
+  try {
+    return JSON.parse(rawValue) as T;
+  } catch {
+    return fallback;
+  }
+};
+
+const writeJson = <T>(key: string, value: T) => {
+  if (!canUseLocalStorage()) {
     return;
   }
 
-  window.localStorage.setItem(storageKeys.journey, JSON.stringify(journey));
-}
+  window.localStorage.setItem(key, JSON.stringify(value));
+};
 
-export function getJourney(): UserJourney | null {
-  if (!canUseStorage()) {
-    return null;
-  }
+export const saveJourney = (journey: UserJourney) => {
+  writeJson(JOURNEY_STORAGE_KEY, journey);
+};
 
-  const storedJourney = window.localStorage.getItem(storageKeys.journey);
+export const getJourney = () => readJson<UserJourney | null>(JOURNEY_STORAGE_KEY, null);
 
-  if (!storedJourney) {
-    return null;
-  }
-
-  return JSON.parse(storedJourney) as UserJourney;
-}
-
-export function getCheckIns(): DailyCheckIn[] {
-  if (!canUseStorage()) {
-    return [];
-  }
-
-  const storedCheckIns = window.localStorage.getItem(storageKeys.checkIns);
-
-  if (!storedCheckIns) {
-    return [];
-  }
-
-  return JSON.parse(storedCheckIns) as DailyCheckIn[];
-}
-
-export function saveCheckIn(checkIn: DailyCheckIn) {
-  if (!canUseStorage()) {
-    return;
-  }
-
+export const saveCheckIn = (checkIn: DailyCheckIn) => {
   const checkIns = getCheckIns();
-  const checkInsWithoutCurrentDay = checkIns.filter(
+  const existingIndex = checkIns.findIndex(
     (storedCheckIn) =>
-      storedCheckIn.journeyId !== checkIn.journeyId || storedCheckIn.day !== checkIn.day,
+      storedCheckIn.journeyId === checkIn.journeyId && storedCheckIn.day === checkIn.day,
   );
 
-  window.localStorage.setItem(
-    storageKeys.checkIns,
-    JSON.stringify([...checkInsWithoutCurrentDay, checkIn]),
-  );
-}
+  if (existingIndex >= 0) {
+    checkIns[existingIndex] = checkIn;
+  } else {
+    checkIns.push(checkIn);
+  }
+
+  writeJson(CHECK_INS_STORAGE_KEY, checkIns);
+};
+
+export const getCheckIns = () =>
+  readJson<DailyCheckIn[]>(CHECK_INS_STORAGE_KEY, []).sort((a, b) => a.day - b.day);
+
+export const clearJourney = () => {
+  if (!canUseLocalStorage()) {
+    return;
+  }
+
+  window.localStorage.removeItem(JOURNEY_STORAGE_KEY);
+  window.localStorage.removeItem(CHECK_INS_STORAGE_KEY);
+};

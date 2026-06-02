@@ -7,29 +7,26 @@ import { EmotionalCheckIn } from "@/components/acsm/emotional-check-in";
 import { JourneyProgress } from "@/components/acsm/journey-progress";
 import { AppShell } from "@/components/layout/app-shell";
 import { fearProfiles } from "@/lib/acsm-method";
-import { initialChallenges } from "@/lib/challenges";
+import { sevenDayChallenges } from "@/lib/challenges";
 import { calculateProgress } from "@/lib/progress";
-import { getCheckIns, getJourney, saveJourney } from "@/lib/storage";
-import type { DailyCheckIn, UserJourney } from "@/lib/types";
+import { getCheckIns, getJourney } from "@/lib/storage";
+import type { DailyCheckIn, DailyChallenge, UserJourney } from "@/lib/types";
 
-function getFearTitle(fearType: UserJourney["fearType"]) {
-  return fearProfiles.find((fear) => fear.id === fearType)?.title ?? "Medo nomeado";
-}
+const getFearTitle = (fearType: UserJourney["fearType"]) =>
+  fearProfiles.find((fear) => fear.id === fearType)?.title ?? "Medo nomeado";
 
-function getCheckInsForJourney(checkIns: DailyCheckIn[], journeyId: string) {
-  return checkIns.filter((checkIn) => checkIn.journeyId === journeyId);
-}
+const getJourneyCheckIns = (checkIns: DailyCheckIn[], journeyId: string) =>
+  checkIns.filter((checkIn) => checkIn.journeyId === journeyId);
 
-function getChallengeForDay(day: number) {
-  const safeDay = Math.max(day, 1);
-  const challenge = initialChallenges.find((dailyChallenge) => dailyChallenge.day === safeDay);
+const getChallengeForDay = (currentDay: number): DailyChallenge => {
+  const challenge = sevenDayChallenges.find((dailyChallenge) => dailyChallenge.day === currentDay);
 
   if (challenge) {
     return challenge;
   }
 
-  return initialChallenges[(safeDay - 1) % initialChallenges.length];
-}
+  return sevenDayChallenges[(currentDay - 1) % sevenDayChallenges.length];
+};
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -37,7 +34,7 @@ export default function DashboardPage() {
   const [checkIns, setCheckIns] = useState<DailyCheckIn[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const refreshDashboard = useCallback(() => {
+  const loadDashboardState = useCallback(() => {
     const storedJourney = getJourney();
 
     if (!storedJourney) {
@@ -45,50 +42,41 @@ export default function DashboardPage() {
       return;
     }
 
-    const storedCheckIns = getCheckInsForJourney(getCheckIns(), storedJourney.id);
-    const progress = calculateProgress(storedCheckIns, storedJourney.length);
-    const updatedJourney = {
-      ...storedJourney,
-      currentDay: progress.currentDay,
-      ...(progress.isComplete && !storedJourney.completedAt ? { completedAt: new Date().toISOString() } : {}),
-    };
+    const journeyCheckIns = getJourneyCheckIns(getCheckIns(), storedJourney.id);
+    const progress = calculateProgress(journeyCheckIns, storedJourney.length);
 
-    if (
-      updatedJourney.currentDay !== storedJourney.currentDay ||
-      updatedJourney.completedAt !== storedJourney.completedAt
-    ) {
-      saveJourney(updatedJourney);
-    }
-
-    setJourney(updatedJourney);
-    setCheckIns(storedCheckIns);
+    setJourney(storedJourney);
+    setCheckIns(journeyCheckIns);
     setIsLoading(false);
 
-    if (progress.isComplete) {
+    if (progress.isCompleted) {
       router.replace("/result");
     }
   }, [router]);
 
   useEffect(() => {
-    refreshDashboard();
-  }, [refreshDashboard]);
+    loadDashboardState();
+  }, [loadDashboardState]);
 
   const progress = useMemo(
     () => (journey ? calculateProgress(checkIns, journey.length) : null),
     [checkIns, journey],
   );
 
-  const challenge = useMemo(
+  const currentChallenge = useMemo(
     () => (progress ? getChallengeForDay(progress.currentDay) : null),
     [progress],
   );
 
   const existingCheckIn = useMemo(
-    () => (progress ? checkIns.find((checkIn: DailyCheckIn) => checkIn.day === progress.currentDay) : undefined),
+    () =>
+      progress
+        ? checkIns.find((checkIn) => checkIn.day === progress.currentDay)
+        : undefined,
     [checkIns, progress],
   );
 
-  if (isLoading || !journey || !progress || !challenge) {
+  if (isLoading || !journey || !progress || !currentChallenge) {
     return (
       <AppShell>
         <section className="mx-auto max-w-4xl px-5 py-20">
@@ -131,7 +119,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="mt-10">
-            <DailyChallengeCard challenge={challenge} />
+            <DailyChallengeCard challenge={currentChallenge} />
           </div>
         </div>
         <aside className="space-y-5 lg:pt-28">
@@ -140,7 +128,7 @@ export default function DashboardPage() {
             day={progress.currentDay}
             existingCheckIn={existingCheckIn}
             journeyId={journey.id}
-            onSaved={refreshDashboard}
+            onSaved={loadDashboardState}
           />
         </aside>
       </section>
