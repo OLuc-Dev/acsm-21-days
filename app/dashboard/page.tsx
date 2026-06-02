@@ -10,7 +10,7 @@ import { fearProfiles } from "@/lib/acsm-method";
 import { sevenDayChallenges } from "@/lib/challenges";
 import { calculateProgress } from "@/lib/progress";
 import { getCheckIns, getJourney } from "@/lib/storage";
-import type { DailyCheckIn, DailyChallenge, UserJourney } from "@/lib/types";
+import type { DailyChallenge, DailyCheckIn, UserJourney } from "@/lib/types";
 
 const getFearTitle = (fearType: UserJourney["fearType"]) =>
   fearProfiles.find((fear) => fear.id === fearType)?.title ?? "Medo nomeado";
@@ -19,13 +19,8 @@ const getJourneyCheckIns = (checkIns: DailyCheckIn[], journeyId: string) =>
   checkIns.filter((checkIn) => checkIn.journeyId === journeyId);
 
 const getChallengeForDay = (currentDay: number): DailyChallenge => {
-  const challenge = sevenDayChallenges.find((dailyChallenge) => dailyChallenge.day === currentDay);
-
-  if (challenge) {
-    return challenge;
-  }
-
-  return sevenDayChallenges[(currentDay - 1) % sevenDayChallenges.length];
+  const challengeIndex = (Math.max(currentDay, 1) - 1) % sevenDayChallenges.length;
+  return sevenDayChallenges[challengeIndex];
 };
 
 export default function DashboardPage() {
