@@ -1,7 +1,25 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
+const appLinks = [
+  { href: "/dashboard", label: "Hoje" },
+  { href: "/progress", label: "Progresso" },
+  { href: "/journal", label: "Diário" },
+];
+
+const landingLinks = [
+  { href: "#metodo", label: "Método" },
+  { href: "#jornada", label: "Jornada" },
+  { href: "#tom", label: "Tom" },
+];
+
 export function Header() {
+  const pathname = usePathname();
+  const isLanding = pathname === "/";
+
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-[#050506]/75 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
@@ -14,12 +32,32 @@ export function Header() {
           </span>
         </Link>
         <nav className="hidden items-center gap-6 text-sm text-[#a7a29a] md:flex">
-          <a href="#metodo" className="transition hover:text-[#f5f2ea]">Método</a>
-          <a href="#jornada" className="transition hover:text-[#f5f2ea]">Jornada</a>
-          <a href="#tom" className="transition hover:text-[#f5f2ea]">Tom</a>
+          {isLanding
+            ? landingLinks.map((link) => (
+                <a key={link.href} href={link.href} className="transition hover:text-[#f5f2ea]">
+                  {link.label}
+                </a>
+              ))
+            : appLinks.map((link) => {
+                const isActive = pathname === link.href;
+
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`transition hover:text-[#f5f2ea] ${
+                      isActive ? "text-[#f0b76a]" : ""
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
         </nav>
         <Button asChild size="sm" variant="secondary">
-          <Link href="/onboarding">Iniciar</Link>
+          <Link href={isLanding ? "/onboarding" : "/dashboard"}>
+            {isLanding ? "Iniciar" : "Hoje"}
+          </Link>
         </Button>
       </div>
     </header>
