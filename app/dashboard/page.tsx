@@ -8,6 +8,7 @@ import { EmotionalCheckIn } from "@/components/acsm/emotional-check-in";
 import { JourneyProgressCard } from "@/components/acsm/journey-progress";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
+import { FadeIn } from "@/components/ui/fade-in";
 import { fearProfiles } from "@/lib/acsm-method";
 import { getChallengeForDay } from "@/lib/challenges";
 import { getPersonalizedCoaching, type CoachResult } from "@/lib/coach";
@@ -128,18 +129,20 @@ export default function DashboardPage() {
             Hoje você pratica uma desobediência pequena.
           </h1>
           <div className="mt-10">
-            {challenge ? (
-              <DailyChallengeCard
-                challenge={challenge}
-                personalizedAction={coaching?.action}
-                insight={coaching?.insight}
-                isPersonalizing={isPersonalizing}
-              />
-            ) : (
-              <p className="text-sm leading-7 text-[#a7a29a]">
-                O conteúdo deste dia ainda não está disponível.
-              </p>
-            )}
+            <FadeIn>
+              {challenge ? (
+                <DailyChallengeCard
+                  challenge={challenge}
+                  personalizedAction={coaching?.action}
+                  insight={coaching?.insight}
+                  isPersonalizing={isPersonalizing}
+                />
+              ) : (
+                <p className="text-sm leading-7 text-[#a7a29a]">
+                  O conteúdo deste dia ainda não está disponível.
+                </p>
+              )}
+            </FadeIn>
           </div>
         </div>
         <aside className="space-y-5 lg:pt-28">

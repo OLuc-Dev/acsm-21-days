@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ShareCard } from "@/components/acsm/share-card";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
+import { FadeIn } from "@/components/ui/fade-in";
 import { fearProfiles } from "@/lib/acsm-method";
 import { calculateProgress } from "@/lib/progress";
 import { clearJourney, getCheckIns, getJourney } from "@/lib/storage";
@@ -67,14 +68,16 @@ export default function ResultPage() {
         </p>
 
         <div className="mt-10">
-          <ShareCard
-            userName={journey.userName}
-            goal={journey.goal}
-            fearTitle={fearTitle}
-            completedDays={progress.completedDays}
-            totalDays={journey.length}
-            emotional={emotional}
-          />
+          <FadeIn>
+            <ShareCard
+              userName={journey.userName}
+              goal={journey.goal}
+              fearTitle={fearTitle}
+              completedDays={progress.completedDays}
+              totalDays={journey.length}
+              emotional={emotional}
+            />
+          </FadeIn>
         </div>
 
         <div className="mt-8 flex justify-center">
