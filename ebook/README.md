@@ -16,12 +16,23 @@ Fonte do e-book em Markdown (`acsm-acabe-com-seus-medos.md`), pronta para export
 
 Requer [Pandoc](https://pandoc.org/). Rode dentro de `ebook/`.
 
-**PDF** (use `xelatex` para os acentos do português):
+**PDF diagramado (dark/premium, identidade ACSM)** — usa o `template.html` deste diretório:
 
 ```bash
-pandoc acsm-acabe-com-seus-medos.md -o acsm.pdf \
-  --pdf-engine=xelatex \
-  -V geometry:margin=2.5cm -V fontsize=12pt -V linkcolor=black
+# 1) Converte o conteúdo em fragmento HTML
+pandoc acsm-acabe-com-seus-medos.md -t html5 -o body.html
+# 2) Injeta o corpo no template (substitui <!--BODY-->)
+sed -e '/<!--BODY-->/{r body.html' -e 'd}' template.html > final.html
+# 3) Imprime em PDF (Chromium headless), página 14x21cm com fundo
+chromium --headless --no-pdf-header-footer --print-to-pdf=acsm.pdf final.html
+# (ou abra final.html no navegador e use "Salvar como PDF", fundo gráfico ativado)
+```
+
+**PDF simples** (sem diagramação, via LaTeX — `xelatex` para os acentos):
+
+```bash
+pandoc acsm-acabe-com-seus-medos.md -o acsm.pdf --pdf-engine=xelatex \
+  -V geometry:margin=2.5cm -V fontsize=12pt
 ```
 
 **EPUB** (e-readers / Kindle via conversão):
