@@ -8,7 +8,9 @@ import { EmotionalCheckIn } from "@/components/acsm/emotional-check-in";
 import { JourneyProgressCard } from "@/components/acsm/journey-progress";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
+import { fearProfiles } from "@/lib/acsm-method";
 import { getChallengeForDay } from "@/lib/challenges";
+import { getPersonalizedCoaching, type CoachResult } from "@/lib/coach";
 import { calculateProgress } from "@/lib/progress";
 import { getCheckIns, getJourney } from "@/lib/storage";
 import type { DailyCheckIn, UserJourney } from "@/lib/types";
@@ -18,6 +20,8 @@ export default function DashboardPage() {
   const [journey, setJourney] = useState<UserJourney | null>(null);
   const [checkIns, setCheckIns] = useState<DailyCheckIn[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [coaching, setCoaching] = useState<CoachResult | null>(null);
+  const [isPersonalizing, setIsPersonalizing] = useState(false);
 
   useEffect(() => {
     const storedJourney = getJourney();
@@ -37,11 +41,42 @@ export default function DashboardPage() {
     [journey, checkIns],
   );
 
+  const challenge = useMemo(
+    () => (journey && progress ? getChallengeForDay(journey.length, progress.currentDay) : null),
+    [journey, progress],
+  );
+
+  const fearTitle = useMemo(
+    () => (journey ? fearProfiles.find((fear) => fear.id === journey.fearType)?.title ?? "" : ""),
+    [journey],
+  );
+
   useEffect(() => {
     if (progress?.isCompleted) {
       router.replace("/result");
     }
   }, [progress, router]);
+
+  useEffect(() => {
+    if (!journey || !challenge || progress?.isCompleted) {
+      return;
+    }
+
+    let cancelled = false;
+    setCoaching(null);
+    setIsPersonalizing(true);
+
+    getPersonalizedCoaching(journey, fearTitle, challenge, checkIns).then((result) => {
+      if (!cancelled) {
+        setCoaching(result);
+        setIsPersonalizing(false);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [journey, challenge, fearTitle, checkIns, progress?.isCompleted]);
 
   if (isLoading || !journey || !progress) {
     return (
@@ -75,7 +110,6 @@ export default function DashboardPage() {
     );
   }
 
-  const challenge = getChallengeForDay(journey.length, progress.currentDay);
   const currentCheckIn =
     checkIns.find((checkIn) => checkIn.day === progress.currentDay) ?? null;
 
@@ -95,7 +129,12 @@ export default function DashboardPage() {
           </h1>
           <div className="mt-10">
             {challenge ? (
-              <DailyChallengeCard challenge={challenge} />
+              <DailyChallengeCard
+                challenge={challenge}
+                personalizedAction={coaching?.action}
+                insight={coaching?.insight}
+                isPersonalizing={isPersonalizing}
+              />
             ) : (
               <p className="text-sm leading-7 text-[#a7a29a]">
                 O conteúdo deste dia ainda não está disponível.
