@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --bg:#0b0a0c; --bg2:#100e11; --ink:#ece7df; --soft:#cdc6bb; --muted:#9b958b;
+    --ember:#e0a85b; --ember2:#f0b76a; --blood:#7f1d1d; --line:rgba(224,168,91,0.22);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);}
+  body{
+    color:var(--ink);
+    font-family:Georgia,"Liberation Serif","DejaVu Serif",serif;
+    font-size:11.6pt; line-height:1.74;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .eyebrow{font-family:"Helvetica Neue",Arial,"Liberation Sans","DejaVu Sans",sans-serif;
+    font-weight:700;font-size:8.5pt;letter-spacing:.34em;text-transform:uppercase;color:var(--ember);}
+
+  /* ---------- COVER ---------- */
+  .cover{
+    height:200mm; overflow:hidden; display:flex; flex-direction:column; justify-content:center; align-items:center;
+    text-align:center; break-after:page; break-inside:avoid; padding:0 16mm;
+    background:
+      radial-gradient(circle at 28% 18%, rgba(224,168,91,0.16), transparent 46%),
+      radial-gradient(circle at 80% 88%, rgba(127,29,29,0.20), transparent 50%),
+      var(--bg);
+  }
+  .cover .mark{
+    width:62px;height:62px;border-radius:50%;border:1.5px solid rgba(224,168,91,0.55);
+    display:flex;align-items:center;justify-content:center;color:var(--ember2);
+    font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;font-size:24px;margin-bottom:30px;
+  }
+  .cover h1{
+    font-family:"Helvetica Neue",Arial,"Liberation Sans",sans-serif;font-weight:800;
+    font-size:50pt;letter-spacing:.14em;margin:0;color:var(--ink);text-indent:.14em;
+  }
+  .cover .sub{font-size:14.5pt;color:var(--soft);margin:18px 0 0;max-width:24em;font-style:italic;}
+  .cover .rule{width:64px;height:2px;margin:30px 0;
+    background:linear-gradient(90deg,transparent,var(--ember),transparent);}
+  .cover .tag{font-family:"Helvetica Neue",Arial,sans-serif;font-size:9pt;letter-spacing:.04em;
+    color:var(--muted);line-height:1.9;text-transform:none;}
+  .cover .top{margin-bottom:28px;}
+
+  /* ---------- CONTENT ---------- */
+  .content{padding:17mm 16mm 20mm;}
+
+  h1{ /* Partes */
+    break-before:page; font-family:"Helvetica Neue",Arial,"Liberation Sans",sans-serif;
+    font-weight:800; font-size:30pt; line-height:1.1; letter-spacing:-.01em;
+    color:var(--ink); margin:6mm 0 8mm; padding-top:4mm;
+  }
+  h1::before{content:"";display:block;width:52px;height:3px;margin-bottom:9mm;
+    background:linear-gradient(90deg,var(--ember),transparent);}
+  h2{ font-family:"Helvetica Neue",Arial,sans-serif; font-weight:700; font-size:17pt;
+    letter-spacing:-.01em; color:var(--ember2); margin:11mm 0 4mm; break-after:avoid; }
+  h3{ font-family:"Helvetica Neue",Arial,sans-serif; font-weight:700; font-size:12.5pt;
+    letter-spacing:.005em; color:var(--ink); margin:9mm 0 3.5mm; break-after:avoid; break-inside:avoid; }
+  h3::before{content:"";display:inline-block;width:7px;height:7px;margin-right:11px;
+    transform:translateY(-2px);background:var(--ember);}
+
+  p{margin:0 0 3.6mm;}
+  .content > p:first-of-type::first-letter,
+  .content h1 + p::first-letter{
+    font-family:Georgia,"Liberation Serif",serif;font-weight:700;color:var(--ember2);
+    font-size:300%;line-height:.9;float:left;padding:2px 10px 0 0;
+  }
+  strong{color:#fbf6ec;font-weight:700;}
+  em{color:var(--soft);}
+  a{color:var(--ember2);text-decoration:none;}
+
+  blockquote{
+    margin:5mm 0; padding:3mm 0 3mm 7mm; border-left:2px solid var(--ember);
+    break-inside:avoid;
+  }
+  blockquote p{margin:0;font-style:italic;color:var(--ember2);font-size:13pt;line-height:1.5;}
+
+  hr{border:none;height:1px;width:46px;margin:7mm 0;
+    background:linear-gradient(90deg,var(--line),transparent);}
+
+  ul,ol{margin:0 0 4mm;padding-left:5.5mm;}
+  li{margin:0 0 1.6mm;}
+  li::marker{color:var(--ember);}
+
+  .content em:only-child{color:var(--muted);}
+</style>
+</head>
+<body>
+  <section class="cover">
+    <div class="top">
+      <div class="mark">A</div>
+      <div class="eyebrow">Acabe Com Seus Medos</div>
+    </div>
+    <h1>ACSM</h1>
+    <p class="sub">21 dias para transformar medo em ação</p>
+    <div class="rule"></div>
+    <p class="tag">Sem motivação. Sem promessa mágica.<br>Só ações pequenas contra fugas antigas.</p>
+  </section>
+  <main class="content">
+<!--BODY-->
+  </main>
+</body>
+</html>
